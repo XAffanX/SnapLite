@@ -1,0 +1,6 @@
+{
+  "name": "SnapLite",
+  "description": "Ultra-lightweight Windows screenshot capture and annotation desktop application featuring region selection, instant shortcuts, fluent editing tools, blur and pixelation, and clipboard export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

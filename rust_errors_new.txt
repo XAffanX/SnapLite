@@ -1,0 +1,12 @@
+   Compiling snaplite v0.1.0 (C:\Users\Admin\Downloads\snaplite (2)\src-tauri)
+src\capture\region.rs:107:22: error[E0599]: no method named `as_bool` found for enum `Result<T, E>` in the current scope: method not found in `Result<(), windows::windows_core::Error>`
+src\capture\window.rs:99:32: error[E0271]: type mismatch resolving `<Option<HWND> as TypeKind>::TypeKind == CopyType`: expected `CopyType`, found `InterfaceType`
+src\capture\window.rs:99:32: error[E0277]: the trait bound `std::option::Option<HWND>: Param<HWND, windows::windows_core::CopyType>` is not satisfied: the trait `windows::windows_core::imp::CanInto<HWND>` is not implemented for `std::option::Option<HWND>`
+src\capture\window.rs:99:32: error[E0277]: the trait bound `std::option::Option<HWND>: Param<HWND, windows::windows_core::CopyType>` is not satisfied: the trait `Interface` is not implemented for `std::option::Option<HWND>`
+src\capture\window.rs:147:19: error[E0271]: type mismatch resolving `<Option<HWND> as TypeKind>::TypeKind == CopyType`: expected `CopyType`, found `InterfaceType`
+src\capture\window.rs:147:19: error[E0277]: the trait bound `std::option::Option<HWND>: Param<HWND, windows::windows_core::CopyType>` is not satisfied: the trait `windows::windows_core::imp::CanInto<HWND>` is not implemented for `std::option::Option<HWND>`
+src\capture\window.rs:147:19: error[E0277]: the trait bound `std::option::Option<HWND>: Param<HWND, windows::windows_core::CopyType>` is not satisfied: the trait `Interface` is not implemented for `std::option::Option<HWND>`
+src\image\processing.rs:1:13: warning: unused import: `GenericImageView`
+src\lib.rs:11:5: warning: unused import: `tauri::Manager`
+warning: `snaplite` (lib) generated 2 warnings
+error: could not compile `snaplite` (lib) due to 7 previous errors; 2 warnings emitted

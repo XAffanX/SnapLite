@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --accent-blue: #0078D4;
+    --accent-blue-hover: #106EBE;
+    --win-surface: #FFFFFF;
+    --win-subtle: #F3F4F6;
+    --win-border: rgba(0, 0, 0, 0.08);
+  }
+
+  .dark {
+    --accent-blue: #60A5FA;
+    --accent-blue-hover: #3B82F6;
+    --win-surface: #202020;
+    --win-subtle: #2D2D2D;
+    --win-border: rgba(255, 255, 255, 0.1);
+  }
+
+  body {
+    font-family: "Segoe UI Variable", "Segoe UI", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Custom scrollbars for Fluent Windows style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Crosshair precision cursor */
+.cursor-crosshair-precision {
+  cursor: crosshair;
+}
+
+/* Checkerboard background for transparent image preview */
+.bg-transparency-grid {
+  background-color: #f8fafc;
+  background-image:
+    linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+    linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+.dark .bg-transparency-grid {
+  background-color: #1e293b;
+  background-image:
+    linear-gradient(45deg, #0f172a 25%, transparent 25%),
+    linear-gradient(-45deg, #0f172a 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #0f172a 75%),
+    linear-gradient(-45deg, transparent 75%, #0f172a 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
