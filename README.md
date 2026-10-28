@@ -1,158 +1,149 @@
-# SnapLite — Modern, Ultra-Lightweight Windows Screenshot & Annotation Application
+# SnapLite
 
-SnapLite is a fast, offline Windows screenshot capture and annotation desktop utility built with **Tauri 2**, **Rust**, **React 19**, and **Tailwind CSS**. It combines the rapid workflow of the Windows Snipping Tool with the annotation depth of ShareX, wrapped in a polished Windows 11 Fluent design.
+**A lightweight, Windows-focused screenshot and annotation desktop app.**
 
----
+SnapLite is an open-source project built with **Tauri 2, Rust, React, and TypeScript**. It brings screen capture, annotation tools, and image export into a desktop interface. The project is under active development; some Windows capture behaviors and editing workflows still need device-level testing.
 
-## Architecture & Multi-Window Pipeline
-
-SnapLite uses a multi-window architecture designed for high-DPI and multi-monitor Windows environments:
-
-1. **Main Window (`main`)**:
-   - Host for `App.tsx` (Dashboard, Annotation Studio, Settings, History).
-   - Coordinates global hotkeys, delay timers, and native events.
-2. **Overlay Window (`overlay`)**:
-   - Host for `OverlayWindow.tsx` (loaded via `index.html#overlay`).
-   - Positioned borderless across the virtual desktop coordinates (`SM_XVIRTUALSCREEN`, `SM_YVIRTUALSCREEN`, `SM_CXVIRTUALSCREEN`, `SM_CYVIRTUALSCREEN`).
-   - Renders the frozen desktop snapshot at 1:1 pixel fidelity with crosshair cursor, loupe magnifier, live dimension tags, and 8-point handles.
-   - On confirm: Sends selection bounds (`{ x, y, width, height }`) to `confirm_region_crop` in Rust, crops the native pixel buffer, closes the overlay, restores the main window, and opens the editor.
-   - On cancel (`Esc`): Calls `cancel_region_selection`, hides the overlay, and restores the main window.
-
----
+> **Project status:** Early development (v0.1.0). The source code is available, but not all features are verified end to end. Treat this as a preview until the capture and packaging workflows have been tested on Windows.
 
 ## Features
 
-### 1. High-Performance Screen Capture Engine
-- **Region Capture (`Ctrl + Shift + S`)**:
-  - Hides main window to prevent self-capture.
-  - Precision crosshair overlay with pixel-level alignment and live coordinates.
-  - Real-time Loupe magnifier with 4x zoom and hex RGB color readout.
-  - Live selection dimensions badge (`W × H px`).
-  - 8-point interactive resizing handles and drag-to-move.
-  - Enter to confirm, Esc to cancel, Ctrl+C to copy directly.
-- **Fullscreen Capture (`Ctrl + Shift + F`)**:
-  - Instantly captures primary display, selected monitors, or virtual multi-monitor desktop.
-- **Window Capture (`Ctrl + Shift + W`)**:
-  - Enumerates and captures specific application windows by HWND.
-- **Delayed Capture (3s, 5s, 10s)**:
-  - Countdown HUD with Esc cancel that triggers the exact same native region-selection path upon completion.
+The current codebase includes implementations for:
 
-### 2. Advanced Annotation Studio
-- **Vector Tools**:
-  - **Arrow**: Crisp vector arrows with arrowhead and adjustable thickness.
-  - **Rectangle & Circle**: Outlined or semi-transparent filled shapes.
-  - **Freehand Pen**: Smooth continuous drawing.
-  - **Highlighter**: Translucent highlighter strokes with alpha blending.
-  - **Text Tool**: Direct placement with adjustable font size and bold styling.
-  - **Numbered Steps**: Auto-incrementing circular badges (`1`, `2`, `3`...) with custom colors.
-- **Raster Manipulation**:
-  - **Pixel Blur**: True pixel-level convolution blur directly applied to image data. First-class selectable and undoable annotation object.
-  - **Mosaic Pixelate**: Block-level mosaic pixelation for redacting sensitive data.
-  - **Crop Tool**: Interactive cropping with rule-of-thirds grid lines and resolution preservation.
-- **Object Selection & Manipulation**:
-  - Click on any annotation (vectors, text, numbers, blur, or pixelate) to select it, drag to move, and press `Delete` or `Backspace` to delete.
-- **History & Undo/Redo**:
-  - Complete state stack supporting vector annotations, pixel raster edits, and crops (`Ctrl + Z` / `Ctrl + Y`).
+- **Screen capture:** region selection, fullscreen capture, window selection, and delayed capture workflows.
+- **Annotation:** arrows, rectangles, circles, pen, highlighter, text, numbered markers, crop, blur, and pixelation.
+- **Editing:** selection tools, configurable colors, and undo/redo state.
+- **Windows integration:** native Rust capture routines, keyboard shortcut registration, system tray, and clipboard functionality.
+- **Output:** image export paths for PNG, JPEG, and WebP.
+- **UI:** modern React-based dashboard and editor with theme preferences.
 
-### 3. Native Windows & System Tray Integration
-- **Direct Clipboard Copy**: Writes true PNG image byte buffers to Windows clipboard via `arboard` / Clipboard API.
-- **System Tray Mode**: Runs silently in background; minimize to tray on close, left-click to restore, right-click context menu (Capture Region, Fullscreen, Window, Settings, Quit).
-- **Startup Conflict Handling**: Non-fatal conflict detection for global shortcuts (`Ctrl+Shift+S`, etc.) reporting conflicts to the UI without crashing.
-- **Export Formats**: PNG (lossless), JPEG (compressed), and WebP with quality sliders and timestamped filenames (`SnapLite_YYYY-MM-DD_HH-mm-ss.png`).
-- **100% Offline & Private**: Zero analytics, zero external network calls, zero telemetry.
+Some features may not yet work reliably across all monitors, DPI configurations, and applications. Bug reports and reproducible test results are welcome.
 
----
+## Screenshots
 
-## Keyboard Shortcuts
+Screenshots of the current Windows build will be added after the user interface and capture workflow have been validated.
 
-| Shortcut | Action |
-|---|---|
-| `Ctrl + Shift + S` | Capture Region (Crosshair Overlay) |
-| `Ctrl + Shift + F` | Capture Fullscreen |
-| `Ctrl + Shift + W` | Capture Active Window |
-| `Ctrl + C` | Copy screenshot to Clipboard |
-| `Ctrl + S` | Save screenshot to file |
-| `Ctrl + Z` | Undo last action |
-| `Ctrl + Y` | Redo action |
-| `Delete` / `Backspace` | Delete selected annotation object |
-| `V` | Selection tool |
-| `A` | Arrow tool |
-| `P` | Pen tool |
-| `R` | Rectangle tool |
-| `O` | Circle / Ellipse tool |
-| `H` | Highlighter tool |
-| `T` | Text tool |
-| `B` | Blur tool |
-| `X` | Pixelate tool |
-| `N` | Numbered marker tool |
-| `C` | Crop tool |
-| `Esc` | Cancel overlay or return to dashboard |
+## Tech stack
 
----
+| Layer | Technology |
+| --- | --- |
+| Desktop application | Tauri 2 |
+| Native integration | Rust, Windows APIs |
+| Frontend | React 19, TypeScript, Vite |
+| Styling and icons | Tailwind CSS, Lucide React |
+| Editing and state | Konva, Zustand |
+| Image processing | Rust `image` crate and browser canvas utilities |
 
-## Project Structure
+## Requirements
 
-```
-├── src-tauri/                 # Native Rust & Tauri 2 backend
-│   ├── Cargo.toml            # Rust dependencies (tauri 2, windows, arboard, image, tokio)
-│   ├── build.rs              # Tauri 2 build script
-│   ├── tauri.conf.json       # Multi-window (main, overlay) & system tray config
-│   ├── capabilities/         # Scoped desktop permissions (default.json)
-│   ├── icons/                # Windows icon assets (32x32, 128x128, 256x256, 512x512, .ico)
-│   └── src/
-│       ├── main.rs           # Windows binary entrypoint
-│       ├── lib.rs            # Tauri 2 app setup, DPI awareness & plugin registration
-│       ├── commands.rs       # Native IPC commands (start_region, confirm_crop, etc.)
-│       ├── clipboard.rs      # Native image clipboard writer
-│       ├── shortcuts.rs      # Global hotkey registration & conflict handling
-│       ├── tray.rs           # System tray icon & unified context menu handlers
-│       ├── settings.rs       # Local JSON configuration persistence
-│       ├── capture/          # Windows GDI BitBlt & window enumeration
-│       └── image/            # Rust blur, pixelate, and format encoding
-├── src/                      # Frontend (React 19 + TypeScript + Tailwind)
-│   ├── main.tsx              # Multi-window router (App vs OverlayWindow)
-│   ├── App.tsx               # Main application controller
-│   ├── components/
-│   │   ├── TitleBar.tsx              # Windows 11 Fluent titlebar & window controls
-│   │   ├── CaptureOverlay.tsx        # Crosshair region selector & live loupe
-│   │   ├── AnnotationToolbar.tsx     # Floating tool palette & color pickers
-│   │   ├── ScreenshotCanvas.tsx      # Vector & raster annotation canvas
-│   │   ├── CaptureCountdown.tsx      # Delayed capture countdown ring
-│   │   ├── WindowSelectorModal.tsx   # Active window picker
-│   │   ├── RecentScreenshots.tsx     # Gallery of recent captures
-│   │   ├── SettingsPanel.tsx         # Preferences, shortcuts & build options
-│   │   └── SystemTraySimulator.tsx   # Taskbar tray simulation
-│   ├── pages/
-│   │   ├── Dashboard.tsx             # Main SnapLite dashboard
-│   │   ├── EditorPage.tsx            # Annotation studio
-│   │   └── OverlayWindow.tsx         # Dedicated overlay window entry point
-│   ├── services/
-│   │   ├── tauriBridge.ts            # Tauri IPC & web fallback screen capture
-│   │   └── imageProcessing.ts        # Canvas convolution blur, pixelate & export
-│   └── stores/
-│       ├── editorStore.ts            # Zustand editor & undo/redo history store
-│       ├── recentStore.ts            # Recent captures store
-│       └── settingsStore.ts          # Persistent settings store
-```
+To build SnapLite on Windows, install:
 
----
+- Windows 10 or 11
+- Node.js and npm
+- Rust (stable **MSVC** toolchain)
+- Visual Studio 2022 C++ Build Tools with **Desktop development with C++** and a Windows SDK
+- Microsoft Edge WebView2 Runtime (available on most modern Windows installations)
 
-## Windows Packaging & Compilation
+For installation and setup, see the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
 
-To build the native Windows `.exe` and `.msi` standalone installer:
+## Run locally
+
+Clone the repository and install the JavaScript dependencies:
 
 ```powershell
-# 1. Install frontend packages
+git clone https://github.com/XAffanX/SnapLite.git
+cd SnapLite
 npm install
+```
 
-# 2. Run in development mode
+Check the frontend and Rust code:
+
+```powershell
+npm run lint
+cargo check --manifest-path src-tauri/Cargo.toml
+```
+
+Launch the desktop app in development mode:
+
+```powershell
 npm run tauri dev
+```
 
-# 3. Compile optimized production release
+> Run these commands from a terminal where the Visual Studio MSVC tools are available. On Windows, the **x64 Native Tools Command Prompt for VS 2022** is a reliable choice. The first Rust build downloads and compiles dependencies.
+
+## Build a Windows installer
+
+```powershell
 npm run tauri build
 ```
 
-Generated outputs:
-- `src-tauri/target/release/snaplite.exe` (Standalone portable executable)
-- `src-tauri/target/release/bundle/msi/SnapLite_0.1.0_x64_en-US.msi` (Windows Installer)
-- `src-tauri/target/release/bundle/nsis/SnapLite_0.1.0_x64-setup.exe` (NSIS setup wizard)
+When packaging succeeds, look under:
+
+```text
+src-tauri/target/release/bundle/
+```
+
+The output may include MSI and/or NSIS installers depending on your Tauri configuration. The release executable is generally located at `src-tauri/target/release/snaplite.exe`. A successful build does not, by itself, confirm capture features are working on every Windows display configuration.
+
+## Keyboard shortcuts
+
+The project defines the following defaults; availability can depend on Windows/global-shortcut conflicts and application focus.
+
+| Shortcut | Intended action |
+| --- | --- |
+| `Ctrl + Shift + S` | Region capture |
+| `Ctrl + Shift + F` | Fullscreen capture |
+| `Ctrl + Shift + W` | Window capture |
+| `Ctrl + C` | Copy an image (context-dependent) |
+| `Ctrl + S` | Save the current screenshot |
+| `Ctrl + Z` / `Ctrl + Y` | Undo / redo |
+| `Esc` | Cancel selection |
+
+## Project structure
+
+```text
+SnapLite/
+├── src/                       # React UI, editor, stores, Tauri bridge
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── stores/
+│   └── types/
+├── src-tauri/                 # Tauri and native Rust code
+│   ├── capabilities/
+│   ├── icons/
+│   └── src/
+│       ├── capture/          # Region, monitor, and window capture
+│       ├── image/            # Image processing and export
+│       ├── commands.rs
+│       ├── shortcuts.rs
+│       └── tray.rs
+├── package.json
+└── README.md
+```
+
+## Testing and known limitations
+
+Before distributing a release, test at least:
+
+1. Region capture on a single display, including confirming and cancelling the selection.
+2. Multi-monitor and mixed-DPI selection coordinates.
+3. Fullscreen and individual window capture.
+4. Clipboard paste into Paint or another application.
+5. Saving annotated PNG/JPEG/WebP images and undo/redo behavior.
+6. Global shortcuts when the main window is minimized to the tray.
+7. Running the **packaged installer**, not just `tauri dev`.
+
+The browser UI preview is **not** a substitute for native Windows screenshot testing. Some protected content or applications may restrict screen capture. Please file issues with Windows version, monitor layout/scaling, reproduction steps, and relevant logs. **Remove private data and captured sensitive images from logs/screenshots before sharing.**
+
+## Privacy
+
+SnapLite is designed for local screenshot workflows. Review the source and dependencies before deploying it in security-sensitive environments; an independent privacy/security audit has not been completed.
+
+## Contributing
+
+Bug reports, testing notes, documentation improvements, and pull requests are welcome. For major changes, open an issue describing your proposal before implementation.
+
+---
+
+Built as a learning and engineering project exploring **Rust, Tauri, Windows APIs, and modern desktop UI development**.
